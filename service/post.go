@@ -109,18 +109,26 @@ func IdToComments(c *gin.Context, postID int) {
 	}
 }
 
-func UpdateStar(c *gin.Context, postID int) {
-	var post model.Post
-	var err error
-	err, post = dao.SearchPost(postID)
-	if err != nil {
-		resp.FindError(c, "留言不存在", err)
+func UpdateLike(c *gin.Context, postID int) {
+	val, ok := c.Get("username")
+	if !ok {
+		resp.OKWithData(c, "未取得用户名")
 	} else {
-		err = dao.UpdateStar(postID, post)
+		username := val.(string)
+
+		var post model.Post
+		var err error
+		err, post = dao.SearchPost(postID)
+
 		if err != nil {
-			resp.FindError(c, "点赞失败", err)
+			resp.FindError(c, "留言不存在", err)
 		} else {
-			resp.OKWithData(c, "点赞成功")
+			err, message := dao.UpdateStar(postID, post, username)
+			if err != nil {
+				resp.FindError(c, message, err)
+			} else {
+				resp.OKWithData(c, message)
+			}
 		}
 	}
 }

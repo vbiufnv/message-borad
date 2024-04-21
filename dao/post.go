@@ -37,6 +37,25 @@ func ListPosts(username string) (int, []model.Post) {
 	return 1, posts
 }
 
-func UpdateStar(postid int, post model.Post) error {
-	return DB.Model(&post).Select("star").Updates(model.Post{Star: post.Star + 1}).Error
+func UpdateStar(postid int, post model.Post, username string) (error, string) {
+	var like model.Like
+	result := DB.Where("username=? AND post_id=?", username, postid).First(&like)
+	if result.RowsAffected != 0 {
+		err := DB.Delete(&like).Error
+		if err != nil {
+			return err, "取消点赞失败"
+		}
+		return nil, "取消点赞成功"
+	}
+	like = model.Like{PostID: postid, Username: username}
+
+	err := DB.Create(&like).Error
+	if err != nil {
+		return err, "点赞失败"
+	}
+	err = DB.Model(&post).Select("star").Updates(model.Post{Star: post.Star + 1}).Error
+	if err != nil {
+		return err, "更新点赞失败"
+	}
+	return nil, "点赞成功"
 }

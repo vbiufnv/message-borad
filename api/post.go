@@ -73,10 +73,11 @@ func IdToComments(c *gin.Context) {
 
 // 点赞
 func LikePost(c *gin.Context) {
+
 	postId, err := strconv.Atoi(c.Param("post_id")[1:])
 	if err != nil {
 		resp.ParamError(c)
 	} else {
-		service.UpdateStar(c, postId)
+		service.UpdateLike(c, postId)
 	}
 }

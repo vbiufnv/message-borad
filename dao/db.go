@@ -17,7 +17,7 @@ func ConDB() (err error) {
 		log.Fatal(err)
 	}
 
-	DB.AutoMigrate(&model.Comment{}, &model.User{}, &model.Post{})
+	DB.AutoMigrate(&model.Comment{}, &model.User{}, &model.Post{}, &model.Like{})
 
 	return DB.DB().Ping()
 
