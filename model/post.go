@@ -5,5 +5,6 @@ type Post struct {
 	Title    string
 	Content  string
 	Username string
+	Status   int `gorm:"default:1"` //默认公开
 	Star     int `gorm:"default:0"`
 }

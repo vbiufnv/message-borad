@@ -9,9 +9,11 @@ func SetRouter() {
 
 	r.POST("/login", Login)
 	r.POST("/register", Register)
-	r.PUT("/update", Update)
 
 	r.Use(AuthMiddleware())
+
+	r.POST("/user/quit", QuitLogin)
+	r.PUT("/user/update", Update)
 
 	r.POST("/post", CreatePost)
 	r.PUT("/post", UpdatePost)

@@ -15,9 +15,15 @@ func Login(c *gin.Context, username, password string) {
 	if !result || u.Password != password {
 		resp.UsernameOrPasswordError(c)
 	} else {
-		//token
-		tokenString := CreateToken(username)
-		resp.OKWithData(c, map[string]string{"token": tokenString})
+		//更新登录状态
+		err := dao.UpdateLoginStatus(username, 1)
+		if err != nil {
+			resp.FindError(c, "登陆状态更新失败", err)
+		} else {
+			//token
+			tokenString := CreateToken(username)
+			resp.OKWithData(c, map[string]string{"token": tokenString})
+		}
 	}
 }
 
@@ -53,5 +59,14 @@ func Update(c *gin.Context, username, oldPassword, newPassword string) {
 		} else {
 			resp.OKWithData(c, "修改成功")
 		}
+	}
+}
+
+func QuitLogin(c *gin.Context, username string) {
+	err := dao.UpdateLoginStatus(username, 0)
+	if err != nil {
+		resp.FindError(c, "更新登录状态失败", err)
+	} else {
+		resp.OK(c)
 	}
 }

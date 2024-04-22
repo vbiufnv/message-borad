@@ -15,14 +15,18 @@ func SearchUser(username string) (bool, model.User) {
 
 func CreateUser(username, password string) error {
 	var u model.User
-	u = model.User{Username: username, Password: password}
+	u = model.User{Username: username, Password: password, Status: 0}
 	if err := DB.Create(&u).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdatePassword(pasword string, u model.User) error {
-	err := DB.Model(&u).Select("password").Updates(model.User{Password: pasword}).Error
+func UpdatePassword(password string, u model.User) error {
+	err := DB.Model(&u).Select("password").Updates(model.User{Password: password}).Error
 	return err
+}
+
+func UpdateLoginStatus(username string, status int) error {
+	return DB.Model(&model.User{}).Where("username = ?", username).Update("status", status).Error
 }

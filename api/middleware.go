@@ -3,8 +3,8 @@ package api
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"log"
 	"message-borad/model"
+	"message-borad/resp"
 	"net/http"
 	"strings"
 )
@@ -24,7 +24,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			return Secret, nil
 		})
 		if err != nil {
-			log.Fatal(err)
+
+			resp.FindError(c, "tokenString解析出错", err)
 		}
 
 		username := token.Claims.(*model.Claim).Username

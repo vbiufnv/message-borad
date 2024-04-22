@@ -16,10 +16,14 @@ func CreatePost(c *gin.Context) {
 	//title&content
 	title := c.PostForm("title")
 	content := c.PostForm("content")
-	if title == "" || content == "" {
+	status, err := strconv.Atoi(c.PostForm("status"))
+	if err != nil {
+		resp.FindError(c, "获取留言状态失败", err)
+
+	} else if title == "" || content == "" {
 		resp.OKWithData(c, "标题or内容为空")
 	} else {
-		service.CreatePost(c, title, content, username)
+		service.CreatePost(c, title, content, username, status)
 	}
 }
 

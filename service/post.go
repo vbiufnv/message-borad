@@ -8,10 +8,10 @@ import (
 	"net/http"
 )
 
-func CreatePost(c *gin.Context, title, content, username string) {
+func CreatePost(c *gin.Context, title, content, username string, status int) {
 	var post model.Post
 	var err error
-	post = model.Post{Title: title, Content: content, Username: username}
+	post = model.Post{Title: title, Content: content, Username: username, Status: status}
 	err, post = dao.CreatePost(post)
 	if err != nil {
 		resp.FindError(c, "发布失败", err)

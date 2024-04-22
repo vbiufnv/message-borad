@@ -31,9 +31,19 @@ func Register(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	username := c.PostForm("username")
+	val, _ := c.Get("username")
+	username := val.(string)
+
 	oldPassword := c.PostForm("old_password")
 	newPassword := c.PostForm("new_password")
 
 	service.Update(c, username, oldPassword, newPassword)
+}
+
+func QuitLogin(c *gin.Context) {
+	val, _ := c.Get("username")
+	username := val.(string)
+
+	service.QuitLogin(c, username)
+
 }
